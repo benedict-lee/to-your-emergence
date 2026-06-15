@@ -887,6 +887,24 @@ deck-stage section[data-deck-active] .d5{transition-delay:.38s;}
 .bleed-center.s11 .scrim2{background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.3) 22%,transparent 50%);}
 .bleed-center.s11 .e{display:inline-flex;align-items:center;gap:10px;}
 .bleed-center.s11 .e .dot{width:13px;height:13px;border-radius:50%;display:inline-block;}
+/* S10 우측 — 작년 매일 기록한 바이브코딩 일지(양떼몰이 보더콜리 비유의 출처).
+   위치는 transform 없이(margin:auto+top/bottom) 잡아 .rise 등장 애니메이션과 충돌 방지. */
+.bleed-center.s11 .vibe{position:absolute;z-index:2;right:var(--pad-x);top:0;bottom:0;
+  margin:auto 0;width:600px;max-width:42%;height:max-content;
+  display:flex;flex-direction:column;align-items:flex-start;gap:14px;cursor:zoom-in;}
+.bleed-center.s11 .vibe .vc-mark{display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:.02em;
+  color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.75);}
+.bleed-center.s11 .vibe .vc-mark .dot{width:13px;height:13px;border-radius:50%;display:inline-block;flex:none;}
+.bleed-center.s11 .vibe image-slot{position:relative;inset:auto;width:100%;height:auto;
+  aspect-ratio:1562 / 1484;border-radius:16px;overflow:hidden;background:#fff;
+  box-shadow:0 30px 72px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.14);}
+.bleed-center.s11 .vibe:focus-visible{outline:3px solid var(--blue);outline-offset:6px;border-radius:18px;}
+/* 클릭 시 높이 100%로 확대 (다시 클릭/배경 클릭하면 복귀) */
+.bleed-center.s11 .vibe.zoom{right:auto;left:0;top:0;bottom:0;margin:0;width:100%;max-width:none;
+  height:100%;align-items:center;justify-content:center;z-index:6;background:rgba(8,8,10,.9);cursor:zoom-out;}
+.bleed-center.s11 .vibe.zoom .vc-mark{display:none;}
+.bleed-center.s11 .vibe.zoom image-slot{width:auto;height:100%;box-shadow:0 30px 90px rgba(0,0,0,.6);}
 
 /* S12 — 영상 파사드(#24 커버 썸네일 + 클릭 재생 · 인쇄/오프라인 폴백) */
 .vfacade{padding:0;position:relative;overflow:hidden;}
@@ -1335,6 +1353,10 @@ html[data-theme="dark"] .fst-seg button[data-on]{background:#3A3A40;}
     <div class="mid">
       <div class="e rise"><span class="dot c-red"></span>&lsquo;잘 쓴다&rsquo;에 대한 나의 생각 <span style="color:#fff">@2025.03</span></div>
     </div>
+    <figure class="vibe rise d2" role="button" tabindex="0" aria-label="바이브코딩 일지 확대/축소">
+      <figcaption class="vc-mark"><span class="dot c-orange"></span>바이브코딩 실험 6일차 기록</figcaption>
+      <image-slot fit="contain" src="assets/vibework.png" alt="바이브코딩 실험 6일차 기록"></image-slot>
+    </figure>
   </section>
 
   <!-- S11 — Agentic Coding · Principles & Practices (split + 링크 + QR) · 그 직관을 원칙으로 형식화 -->
@@ -2078,6 +2100,20 @@ html.spk-on #spk-bar{display:block;}
   // 슬라이드 이동 시 항상 앞면(소개)으로 복귀
   var stage=document.querySelector('deck-stage');
   if(stage) stage.addEventListener('slidechange', function(){ flip.classList.remove('flipped'); });
+})();
+</script>
+
+<script>
+/* S10 — 바이브코딩 일지 사진: 클릭하면 높이 100%로 확대, 다시 클릭하면 복귀.
+   슬라이드를 떠나면 항상 축소 상태로 복귀. */
+(function(){
+  var fig=document.querySelector('section.bleed-center.s11 .vibe');
+  if(!fig) return;
+  var toggle=function(e){ if(e){e.stopPropagation();} fig.classList.toggle('zoom'); };
+  fig.addEventListener('click', toggle);
+  fig.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(e); } });
+  var stage=document.querySelector('deck-stage');
+  if(stage) stage.addEventListener('slidechange', function(){ fig.classList.remove('zoom'); });
 })();
 </script>
 
