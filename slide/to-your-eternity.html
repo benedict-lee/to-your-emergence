@@ -39,8 +39,11 @@ html[data-density="comfy"]{ --pad-x:160px; --pad-y:124px; --gap:46px; }
 deck-stage:not(:defined){visibility:hidden;}
 body{margin:0;background:#0c0c0d;font-family:var(--font-body);}
 
-/* ---- slide base ---- */
-deck-stage section{
+/* ---- slide base ----
+   'deck-stage section' 대신 'section' 으로 둔다: 썸네일 레일은 슬라이드를
+   deck-stage 밖(클론 shadow)에서 렌더하므로, deck-stage 로 스코프하면 배경·패딩·
+   레이아웃이 빠져 하얗게 보인다. 이 덱의 <section> 은 전부 슬라이드라 안전하다. */
+section{
   background:var(--bg);
   color:var(--fg);
   font-family:var(--font-body);
@@ -99,13 +102,16 @@ ul{list-style:none;}
   25%{transform:translateY(-26px) scale(1.06);}
 }
 
-/* ===== entrance animation (transition-based — robust for capture/print) ===== */
-.rise{opacity:0;transform:translateY(26px);
+/* ===== entrance animation (transition-based — robust for capture/print) =====
+   기본을 '보임'으로 두고, 데크 안의 '비활성' 슬라이드일 때만 숨긴다.
+   → 본 화면 등장 애니메이션은 그대로, 썸네일/클론(데크 밖·active 아님)에서는
+     .rise/.pop 콘텐츠가 정상 노출된다. */
+.rise{opacity:1;transform:none;
   transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);}
-.pop{opacity:0;transform:scale(.6);
+.pop{opacity:1;transform:none;
   transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1);}
-deck-stage section[data-deck-active] .rise,
-deck-stage section[data-deck-active] .pop{opacity:1;transform:none;}
+deck-stage section:not([data-deck-active]) .rise{opacity:0;transform:translateY(26px);}
+deck-stage section:not([data-deck-active]) .pop{opacity:0;transform:scale(.6);}
 deck-stage section[data-deck-active] .d1{transition-delay:.06s;}
 deck-stage section[data-deck-active] .d2{transition-delay:.14s;}
 deck-stage section[data-deck-active] .d3{transition-delay:.22s;}
