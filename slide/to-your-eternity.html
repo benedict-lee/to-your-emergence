@@ -294,6 +294,10 @@ deck-stage section[data-deck-active] .d5{transition-delay:.38s;}
 /* S21 좌측 — 산출물 이미지(상단) + QR(하단은 split 기본 .linkrow) */
 .split .ex-img{width:100%;aspect-ratio:1587/1131;border-radius:18px;overflow:hidden;background:#0b1424;margin-top:48px;}
 .split .ex-img image-slot{width:100%;height:100%;}
+/* S21 식단표 이미지 아래 캡션 — 변환 단계 → '딸깍' */
+.split .ex-cap{margin-top:18px;font-size:24px;line-height:1.45;color:var(--fg);font-family:var(--font-body);}
+.split .ex-cap .arrow{color:var(--muted);margin:0 6px;font-weight:600;}
+.split .ex-cap b{color:var(--blue);font-weight:700;}
 /* S23 — 증강(+) vs 증폭(×) · 템플릿 05 비교 구조 + 하단 대형 글리프 */
 .vsamp .vs-head{display:flex;flex-direction:column;}
 .vsamp .h-title{font-size:58px;font-weight:700;line-height:1.1;margin-top:14px;}
@@ -1598,6 +1602,7 @@ html[data-theme="dark"] .fst-seg button[data-on]{background:#3A3A40;}
       <div class="ex-img rise d1">
         <image-slot id="menupan" fit="cover" src="assets/menupan.png" alt="menu 문제 산출물 — 주간 식단표 예시"></image-slot>
       </div>
+      <p class="ex-cap rise d2">업스케일, 크롭, 구조메타정보제공, 검증루프 <span class="arrow">&rarr;</span> <b>딸깍</b></p>
       <div class="linkrow rise d3">
         <div class="qr"><img src="assets/qr_challenge.png" alt="challenge.aitop100.org QR"></div>
         <div class="linktxt"><a class="url" href="https://challenge.aitop100.org" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-decoration-color:var(--blue);text-decoration-thickness:2px;text-underline-offset:5px;">challenge.aitop100.org</a><span style="color:var(--muted)">직접 풀어보기</span></div>
