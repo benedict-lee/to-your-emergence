@@ -1859,6 +1859,150 @@ html[data-theme="dark"] .fst-seg button[data-on]{background:#3A3A40;}
 
 <script src="deck-stage.js"></script>
 <script src="image-slot.js"></script>
+
+<!-- ▼▼ 발표 스피치(speaker notes) 오버레이 — 'S' 키 또는 네비 바의 '스피치' 버튼으로 토글 ▼▼ -->
+<style id="spk-style">
+/* deck-stage 호스트(position:fixed)가 자체 stacking context 라 오버레이 z-index 가
+   호스트 안에 갇힌다. 그래서 바를 가리지 않도록, 바가 켜지면 JS 가 바 높이를 재서
+   --spk-nav-bottom 으로 네비 오버레이를 바 위로 끌어올린다(아래 .overlay 규칙 참고). */
+#spk-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147482000;display:none;
+  max-height:40vh;overflow-y:auto;padding:18px 88px 20px 44px;
+  background:linear-gradient(180deg,rgba(11,11,13,.74),rgba(11,11,13,.95));
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-top:2px solid var(--blue);box-shadow:0 -12px 34px rgba(0,0,0,.4);
+  color:#f1f1f3;font-family:var(--font-body);}
+html.spk-on #spk-bar{display:block;}
+#spk-meta{display:flex;align-items:center;gap:10px;margin-bottom:9px;
+  font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--blue);}
+#spk-meta .n{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:25px;
+  padding:0 8px;border-radius:7px;background:var(--blue);color:#06121a;font-size:13px;}
+#spk-meta .total{color:#7d7d85;font-weight:500;letter-spacing:.02em;}
+#spk-text{font-size:19px;line-height:1.64;letter-spacing:-.005em;color:#e9e9ec;
+  max-width:1180px;word-break:keep-all;}
+#spk-text .empty{color:#83838b;font-style:italic;}
+@media print{#spk-bar{display:none !important;}}
+</style>
+<script type="application/json" id="deck-speech">
+["안녕하세요. 오늘 여러분과 나눌 이야기의 제목은 「To Your Emergence」입니다. 부제는 'AI Native 시대를 살아갈 그대에게'고요. 항상 발표 자료를 만들면 표지에 전체 리소스의 50% 정도를 쓰게 되는 것 같아요. 많은 고민 끝에 제목을 이렇게 지었고요. 왜 이렇게 지었는지는, 바로 다음 장에서 짧게 말씀드리겠습니다.","제목은 이 작품에서 따왔습니다. 「불멸의 그대에게」, 영어로는 'To Your Eternity'. 형체도 이름도 없던 구체 하나가 세상과 닿고 부딪히면서 돌이 되고, 늑대가 되고, 사람이 되어 끝내 변화를 만들어 가는 이야기예요. 저는 이 모습이 지금의 AI, 그리고 그 시대를 처음 살아갈 여러분과 닮았다고 봤습니다. 그래서 '영원(Eternity)'을 '창발(Emergence)'로 한 글자 비틀어서, 'To Your Emergence'라고 지었습니다.","오늘 이 이야기를 드리는 사람은 이호정입니다. 카카오 미래이니셔티브센터에 있고요. AI와 함께 일하는 새로운 방식을 탐구하면서, 앞으로 펼쳐질 세상의 새로운 연결점들을 찾는 일을 하고 있습니다. 개발자였고 애자일코치였고 다시 AI 개발자가 되었지만, 지금 내 타이틀은 개발자라고 말하긴 너무 좁다. 불멸의 그대에게의 구체가 되어 다시 세상을 배워나가는 사람.","어떤 주제로 이야기를 할까 고민을 많이 했는데요. 클로드 코드 사용법? 팁? AX? 너무나 뜨거운 하네스, 그리고 새롭게 떠오르는 루프 엔지니어링, 미토스/페이블의 '우와!' 같은 이야기 — 이런 최신 트렌드나 도구 사용법을 말하려는 게 아닙니다. 이런 기술적인 주제들도 물론 좋지만, 이전 세대의 선배로서, 그리고 AI Native 시대를 함께 살아갈 동료로서 제 생각들을 나누고 싶었습니다. 보시는 5개의 키워드로 생각을 나눠보겠습니다.","AI Native란 뭘까요? 저마다 생각이 조금씩 다를 수 있습니다. 퀴즈는 아니고요, 질문을 하나 드리겠습니다.","\"나는 이 화면이 무슨 화면인지 모른다\" 하는 분, 손 한번 들어주시겠어요? 네, 아직은 다들 아실 거예요. 구글 검색창입니다. 우리는 궁금한 게 있으면 여기에 쳐서 정보를 '찾는' 게 당연했던 세대예요. 그런데 머지않아, 이게 뭔지 모르는 세대가 옵니다.","지금 우리는 정보를 '찾는' 대신, 답을 구하기 시작했고, 내 작업 — 문서나 개발 같은 걸 대신 해주기 시작했으며, 나아가 에이전트 팀들이 각각의 페르소나로 나의 일과 삶에 들어오기 시작했습니다. 다음 세대는 '검색'이 뭔지 모를 거고, 그다음 세대는 '토큰'이니 '모델'이니 'LLM'이니 '에이전트'니 하는 말조차 쓰지 않을 겁니다. 전기 쓰듯, 수도꼭지 틀듯, 그냥 늘 거기 있던 것처럼 AI를 쓰겠죠. 그리고 지금은 이렇게 채팅창이 여기저기 흩어져 있지만, 더 나중엔 이 모든 게 하나의 에이전트로 모일 겁니다. 여러분은 정확히 그 경계에 서 있어요.","이 변화를 잘 표현한 말이 있어요. 와튼스쿨의 Ethan Mollick 교수가 쓴 'Speaking things into existence' — 말로 없던 걸 불러낸다는 거죠. 처음엔 코드 한 줄이었어요. 곧 파일 하나, 리포지토리 전체, 앱 하나가 됐고요. 이제는 코드를 넘어서 글이든 영상이든 이미지든, 말 한마디로 불러낼 수 있는 것의 크기가 지금 이 순간에도 계속 커지고 있습니다.","그런데 여기서 질문을 하나 하고 싶었습니다. 뭐든 불러낼 수 있게 된 지금, 우리는 그저 더 잘 불러내기만 하면 되는 걸까요? 'AI를 잘 쓴다'는 건, 대체 뭘까요?","제 나름의 답을 먼저 비유로 말씀드릴게요. 이건 코딩 에이전트가 막 나오던 2025년, '하네스'라는 개념도 없던 때의 생각입니다. 그때 AI 에이전트는 어디로 튈지 모르는 양떼 같았어요. 그래서 저는, AI를 잘 쓴다는 건 그 양떼를 모는 양떼몰이견이 되는 거라고 생각했습니다. 방향을 잡아주고, 흩어지지 않게 몰아가는 거죠.","그 생각을 정리해서 만든 게 이 자료입니다. 'Agentic Coding' — 개발자가 에이전트와 함께 일할 때의 원칙과 실천법을, 제 실험과 경험으로 정리한 일종의 선언문이에요. 바이브 코딩을 넘어서, 에이전트 코딩으로 가자는 거죠. 핵심은 도구 사용법이 아니라 '책임'입니다. \"이거 챗지피티가 만든 코드인데요?\" 하고 끝나버리지 않게 하려고, 이걸 정리했습니다.","(별다른 설명 없이 바로 영상을 재생합니다. 다음 장에서 '방금 보신 그 대회'로 이어받습니다.)","방금 보신 게 'AI TOP 100'이라는 대회입니다. 사실 AI 모델을 평가하는 잣대는 세상에 넘쳐나는데, 정작 '사람이 AI를 얼마나 잘 다루는가'를 재는 잣대는 없더라고요. 그래서 직접 만들었습니다. 결과가 아니라 과정을 보도록 채점을 설계했고, AI TOP 100과 CAMPUS, 두 번을 가까이서 지켜봤어요. 결론은 하나였습니다. AI를 잘 쓴다는 건, 경력도 툴 숙련도도 아니었어요. 결국 '문제 해결자'가 되는 것이었습니다.","솔직히 처음엔 기존 전문가들이 잘할 거라고 예상했는데, 꼭 그렇지만은 않았어요. 경력과 상관없이, 끝까지 잘 푸는 사람들에겐 세 가지 공통점이 있었습니다. 첫째, 문제를 스스로 정의합니다. 주어진 문제를 푸는 게 아니라, 무엇을 풀지부터 자기가 규정해요. 둘째, AI를 도구가 아니라 동료로 대하면서 협업합니다. 셋째, 매 순간 더 나은 선택을 내리고, 의심하고 검증해서 끝까지 책임집니다. 우리가 찾던 'AI 실력자'는, 바로 이렇게 일하는 사람이었습니다.","그런데 현장에서 제가 내린 이 결론을, Anthropic도 비슷한 방향으로 정리해 뒀더라고요. 두 번째 키워드, AI Fluency — 유창성입니다.","AI Fluency가 뭔지, 짧게 같이 보시죠. (영상 재생.)","방금 본 게 4D 프레임워크입니다. 네 개의 D예요. 위임(Delegation) — 무엇을 맡길지 정하고. 서술(Description) — 원하는 걸 명확히 설명하고. 우리가 흔히 말하는 '프롬프트'가, 사실 이 넷 중 하나일 뿐입니다. 그다음 분별(Discernment) — AI가 내놓은 걸 곧이곧대로 받지 않고 평가하고. 마지막 성실(Diligence) — 끝까지 책임지고 확인합니다. 네 가지 다, 사람이 쥐고 있는 역량이에요. 그리고 일하는 방식도 셋으로 나뉩니다. AI에게 온전히 맡기는 자동화, 사람과 AI가 함께 하는 증강, AI가 위임받아 스스로 해내는 에이전시. 오늘은 그중에서 '증강'을 좀 더 들여다보겠습니다. 이 유창성을 기르면, AI와 함께 증강된 역량을 갖게 되거든요.","세 번째 키워드, Augmentation — 증강입니다. 유창성을 기르면 AI와 함께 증강된 역량을 갖게 된다고 했는데, 그 증강이 어떻게 작용하는지부터 보겠습니다.","저는 AI가 아이언맨 수트와 같다고 생각해요. 입는 순간, 10이던 사람이 110이 됩니다. 다만 한 가지 — 이건 곱하기가 아니라 더하기로 얹힙니다. 그래서 같은 수트를 입어도, 어떤 사람은 60에서 멈추고 어떤 사람은 110까지 끌어내요. 그 차이를 가르는 게 유창성입니다. 유창성엔 두 축이 있어요. 하나는 이해 — 기술과 개념, 원리를 아는 것. 다른 하나는 감각 — 직접 입고 써봐야 몸에 남는 것이에요. 자전거를 생각해 보세요. 타는 영상을 백 번 봐도 안 늘죠. 페달을 직접 밟아봐야 늡니다. 그래서 저는 감각이 더 중요하다고 봐요. 그러니 60에 환호하지 마시고, 110을 향해서 나만의 희소가치를 만드시길 바랍니다.","이 수트엔 특징이 하나 더 있어요. 진화를 멈추지 않는다는 겁니다. 새 세대가 너무 빠르고 가파르게 나오고, 나올 때마다 증강의 폭이 폭증해요. 그래서 이전 세대에서 유창성 100%로 겨우 끌어낸 최선이, 다음 세대에선 '딸깍' 한 번 수준이 됩니다. 새 수트가 나올수록, 어제의 최선은 그렇게 희석돼요.","말로만 하면 와닿지 않으니, 실제 증거를 보여드릴게요. AI TOP 100과 CAMPUS에 공개된 21개 문제를, 사람이 전혀 손대지 않고 에이전트가 끝까지 자동으로 풀게 해봤습니다. 모델 세대를 딱 하나만 올렸는데(5.4에서 5.5로), 점수가 폭증하고 만점이 쏟아졌어요. 어제는 100%로 겨우 풀던 문제가, 오늘은 정말 딸깍이 된 겁니다. 궁금하시면 직접 풀어보실 수 있어요. challenge.aitop100.org입니다.","그런데 AI는 증강, 그러니까 더하기로만 작용하지 않습니다. 네 번째 키워드, Amplification — 증폭이에요.","정리하면 이렇습니다. AI는 우리 역량을 더하기도 하고, 곱하기도 합니다. 내가 잘 모르는 도메인에서는 AI가 부족한 부분을 더해줘요. 이게 증강이고, 여기서 사람을 가르는 건 AI를 얼마나 잘 쓰느냐, 유창성입니다. 그런데 내가 깊이 아는 도메인에서는, AI가 내 역량을 곱합니다. 이게 증폭이고, 곱셈의 크기를 정하는 건 그 도메인에 대한 깊은 이해예요.","이게 이론만은 아니라는 걸, 바둑계가 보여줍니다. 알파고 이후에 프로 기사 전원이 AI로 복기하고 훈련하는데도, 격차가 좁혀지긴커녕 오히려 벌어졌어요. 같은 AI를 써도, 곱해지는 사람이 따로 있더라는 거죠. 잠깐 보시죠. (영상 재생 — 26:50부터. 발췌가 끝나면 직접 정지하거나 다음 장으로 넘깁니다.)","왜 그럴까요? Andrej Karpathy의 말이 답이 될 것 같아요. \"생각은 외주할 수 있어도, 이해는 외주할 수 없다.\" 답은, 작업은 AI에 맡길 수 있어요. 하지만 이해만큼은 내가 해야 합니다. 그 깊은 이해가 바로, 증폭의 크기를 정하는 인자예요.","마지막 키워드입니다. Emergence — 창발. 솔직히 고백하면, 이 챕터가 이번 강연을 준비하면서 제가 가장 오래, 가장 많이 붙들었던 부분이에요. 여기서부턴 저도 답을 다 아는 사람이 아니라, 여러분과 함께 미지를 걸어가는 동행자에 가깝습니다.","그럼 창발이 뭘까요. 저는 이렇게 정리했습니다. 세상의 점·선·면·입체를 이어서, 세상에 없던 새로운 연결을 만들어 내는 것. 이전 세대에는 도메인 하나, 점 하나를 깊이 파고 이해하는 걸로 충분했어요. 그런데 이제는 아닙니다. 그리고 그 점들을 이으려면, 먼저 나만의 이해를 갖춘 — 아까 말씀드린 그 증폭된 점들이 있어야 해요.","그런데 여기서 조금 무서운 얘기를 해야 합니다. 새로운 연결을 찾는 일, 이제 이건 AI가 더 잘해요. 최근 Anthropic이 'Project Glasswing'으로 AI에게 세상의 소프트웨어를 훑게 했더니, 한 달 만에 아무도 못 찾던 고위험·치명 취약점을 1만 개 넘게 찾아냈습니다. 어떤 건 27년이나 묵은 버그였고요. 핵심 오픈소스까지 전수로 훑었어요. 새로운 연결을 찾는 일은, 이제 AI가 더 잘하고, 앞으로는 더 그럴 겁니다. 그럼에도 저는 — AGI든 ASI든 그런 시대가 오더라도, 사람의 자리는 있다고 믿습니다.","왜 그렇게 믿는지, 이야기 하나로 말씀드릴게요. 죽어가던 자기 반려견을 살리려고 AI에 매달린 한 사람의 이야기입니다. 강아지 이름은 로지예요. 보시죠. (영상 재생 — 처음부터. 다음 장에서 해석합니다.)","영상의 헤드라인은 'AI가 암 백신을 만들었다'였죠. 그런데 저는, 이건 AI가 만든 게 아니라고 봐요. 서로 떨어져 있던 세 개의 점이 이어진 겁니다. 첫째, 그가 오래 증폭해 둔 자기 점 — 머신러닝과 데이터. 둘째, 전혀 다른 영역의 점 — 유전체와 mRNA. 셋째, 세상을 바라보는 그만의 점 — 로지, '내 개를 꼭 살리겠다'는, 누구도 대신 가질 수 없는 마음이에요. 이 셋이 이어지면서, 세상에 없던 게 피어났습니다. 이게 바로 창발입니다. (완치냐 아니냐는 아직 논쟁 중이라, 거기까진 단정하지 않겠습니다.)","이 강연의 제목을 다시 꺼낼 때가 됐네요. To Your Emergence — 그대의 창발에게. 방금 본 세 개의 점을, 저는 여러분께 그대로 건네고 싶습니다. 증강을 위해, 유창성을 키우세요. 증폭을 위해, 여러분만의 이해를 깊이 쌓으세요. 창발을 위해, 다른 영역의 점들도 배우고 이해하세요. 그리고 마지막으로 — 사람만이 가질 수 있는, 세상을 보는 여러분만의 점을 찾으세요.","마지막으로 한 가지만 더 말씀드릴게요. 세상을 보는 차원을 조금 더 깊게, 조금 더 멀리 바꿔보세요. 점 하나를 더 깊이 들여다보면 그 안에서 또 다른 연결이 보이고, 더 멀리서 보면 점들을 잇는 새로운 선이 보입니다. 지금은 상상한 것이 정말 쉽게 만들어지는 세상이에요. AI 덕분에, 상상이 현실이 되는 길이 그 어느 때보다 짧아졌습니다. 그러니 상상력을 작은 틀에 가두지 마세요. 경계 없이 자유롭게 상상하고, 그걸 실제로 만들어 가시길 바랍니다. Free your mind. 고맙습니다.",""]
+</script>
+<aside id="spk-bar" role="note" aria-label="발표 스피치" aria-live="polite">
+  <div id="spk-meta"></div>
+  <div id="spk-text"></div>
+</aside>
+<script>
+/* 발표 스피치 오버레이 — #deck-speech(JSON, 슬라이드 1:1) 를 현재 슬라이드에 맞춰
+   하단 바에 표시. 토글 버튼은 deck-stage 네비 오버레이(shadow DOM)의 Reset·Full 옆에
+   주입한다. 'S' 키로도 on·off, 상태는 localStorage 에 저장. */
+(function(){
+  var data=[];
+  try{ data=JSON.parse(document.getElementById('deck-speech').textContent||'[]'); }catch(e){ data=[]; }
+  var bar=document.getElementById('spk-bar'),
+      metaEl=document.getElementById('spk-meta'),
+      textEl=document.getElementById('spk-text'),
+      root=document.documentElement,
+      toggle=null;
+  if(!bar) return;
+  var sections=[].slice.call(document.querySelectorAll('deck-stage section'));
+  var total=sections.length;
+
+  function labelOf(sec){
+    var l=(sec&&(sec.getAttribute('data-label')||sec.getAttribute('data-screen-label')))||'';
+    return l.replace(/^\s*\d+\s+/,''); /* "12 Video" 같은 선행 번호 제거 */
+  }
+  function currentIndex(){
+    var a=document.querySelector('deck-stage section[data-deck-active]');
+    var i=a?sections.indexOf(a):-1;
+    return i<0?0:i;
+  }
+  function render(i){
+    if(i==null||i<0) i=currentIndex();
+    var label=labelOf(sections[i]);
+    metaEl.innerHTML='<span class="n">'+(i+1)+'</span>'+
+      (label?'<span>'+label.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];})+'</span>':'')+
+      '<span class="total">/ '+total+'</span>';
+    var s=(data[i]||'').trim();
+    if(s){ textEl.textContent=s; }
+    else{ textEl.innerHTML='<span class="empty">이 슬라이드의 발표 스피치 노트는 없습니다.</span>'; }
+    updateNavOffset();
+  }
+  function isOn(){ return root.classList.contains('spk-on'); }
+  /* 바 높이를 재서 네비 오버레이(스피치/Reset/Full 등)를 바 위로 끌어올린다 */
+  function updateNavOffset(){
+    if(isOn()){ root.style.setProperty('--spk-nav-bottom',(Math.round(bar.getBoundingClientRect().height)+12)+'px'); }
+    else{ root.style.removeProperty('--spk-nav-bottom'); }
+  }
+  function setOn(on){
+    root.classList.toggle('spk-on',on);
+    if(toggle){ toggle.toggleAttribute('data-on',on); toggle.setAttribute('aria-pressed',on?'true':'false'); }
+    try{ localStorage.setItem('deck-speech.on',on?'1':'0'); }catch(e){}
+    if(on) render(); else updateNavOffset();
+  }
+  window.addEventListener('resize',updateNavOffset);
+
+  /* deck-stage 네비 오버레이(shadow DOM)에 '스피치' 버튼을 Reset·Full 옆에 주입 */
+  function injectButton(){
+    var ds=document.querySelector('deck-stage');
+    if(!ds||!ds.shadowRoot) return false;
+    var overlay=ds.shadowRoot.querySelector('.overlay');
+    if(!overlay) return false;
+    toggle=overlay.querySelector('.btn.spk');
+    if(toggle) return true;
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='btn full spk';
+    b.setAttribute('aria-pressed',isOn()?'true':'false');
+    b.setAttribute('aria-label','발표 스피치 보기 토글 (S)');
+    b.setAttribute('title','발표 스피치 보기 (S)');
+    b.innerHTML='스피치<span class="kbd">S</span>';
+    b.addEventListener('click',function(){ setOn(!isOn()); });
+    overlay.appendChild(b);
+    if(!ds.shadowRoot.getElementById('spk-btn-style')){
+      var st=document.createElement('style');
+      st.id='spk-btn-style';
+      st.textContent='.btn.spk{cursor:pointer;}'+
+        '.btn.spk[data-on]{background:rgba(26,188,254,.24);color:#fff;}'+
+        '.btn.spk[data-on]:hover{background:rgba(26,188,254,.34);}'+
+        '.btn.spk[data-on] .kbd{background:rgba(26,188,254,.5);color:#fff;}'+
+        /* 스피치 바가 켜지면 네비 오버레이를 바 위로 올림 (변수는 :root 에서 상속).
+           deck-stage 자체 .overlay 규칙(adopted sheet)이 뒤 순서라 !important 로 덮어씀. */
+        '.overlay{bottom:var(--spk-nav-bottom,22px)!important;transition:bottom 200ms cubic-bezier(.2,.8,.2,1),opacity 260ms ease,transform 260ms cubic-bezier(.2,.8,.2,1),filter 260ms ease;}';
+      ds.shadowRoot.appendChild(st);
+    }
+    toggle=b;
+    toggle.toggleAttribute('data-on',isOn());
+    return true;
+  }
+  /* deck-stage 업그레이드가 늦을 경우 대비해 몇 프레임 재시도 */
+  (function tryInject(n){
+    if(injectButton()||n<=0) return;
+    requestAnimationFrame(function(){ tryInject(n-1); });
+  })(60);
+
+  /* 슬라이드 전환 시 내용 갱신 (이벤트는 shadow DOM 밖으로 bubble) */
+  document.addEventListener('slidechange',function(e){
+    var i=(e&&e.detail&&typeof e.detail.index==='number')?e.detail.index:null;
+    if(isOn()) render(i);
+  });
+
+  /* 'S' 단축키 (입력 중에는 무시) */
+  window.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var t=e.target;
+    if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if(e.key==='s'||e.key==='S'){ e.preventDefault(); setOn(!isOn()); }
+  });
+
+  /* 초기 상태 복원 */
+  var saved='0';
+  try{ saved=localStorage.getItem('deck-speech.on')||'0'; }catch(e){}
+  setOn(saved==='1');
+  render();
+})();
+</script>
+<!-- ▲▲ 발표 스피치 오버레이 끝 ▲▲ -->
+
+
 <script>
 /* S19·S20 차트 — 막대 자람 + 숫자 카운트업. deck-active 시 10→목표로 재생, 정적 기본값은 최종 상태(프린트 안전) */
 (function(){
