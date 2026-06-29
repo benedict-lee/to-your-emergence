@@ -1893,7 +1893,7 @@ html[data-theme="dark"] .fst-seg button[data-on]{background:#3A3A40;}
 <script src="deck-stage.js"></script>
 <script src="image-slot.js"></script>
 
-<!-- ▼▼ 발표 스피치(speaker notes) 오버레이 — 'S' 키 또는 네비 바의 '스피치' 버튼으로 토글 ▼▼ -->
+<!-- ▼▼ 발표 스피치(speaker notes) 오버레이 — 'S' 키로 토글 (버튼 미표시) ▼▼ -->
 <style id="spk-style">
 /* deck-stage 호스트(position:fixed)가 자체 stacking context 라 오버레이 z-index 가
    호스트 안에 갇힌다. 그래서 바를 가리지 않도록, 바가 켜지면 JS 가 바 높이를 재서
@@ -1925,8 +1925,7 @@ html.spk-on #spk-bar{display:block;}
 </aside>
 <script>
 /* 발표 스피치 오버레이 — #deck-speech(JSON, 슬라이드 1:1) 를 현재 슬라이드에 맞춰
-   하단 바에 표시. 토글 버튼은 deck-stage 네비 오버레이(shadow DOM)의 Reset·Full 옆에
-   주입한다. 'S' 키로도 on·off, 상태는 localStorage 에 저장. */
+   하단 바에 표시. 'S' 키로 on·off (토글 버튼은 표시하지 않음), 상태는 localStorage 에 저장. */
 (function(){
   var data=[];
   try{ data=JSON.parse(document.getElementById('deck-speech').textContent||'[]'); }catch(e){ data=[]; }
@@ -1973,37 +1972,22 @@ html.spk-on #spk-bar{display:block;}
   }
   window.addEventListener('resize',updateNavOffset);
 
-  /* deck-stage 네비 오버레이(shadow DOM)에 '스피치' 버튼을 Reset·Full 옆에 주입 */
+  /* '스피치' 토글 버튼은 표시하지 않는다 — S 키로만 on·off.
+     단, 스피치 바가 켜질 때 deck-stage 네비 오버레이(Reset·Full·prev/next)를
+     바 위로 끌어올리는 스타일은 shadow DOM 에 주입해 둔다. */
   function injectButton(){
     var ds=document.querySelector('deck-stage');
     if(!ds||!ds.shadowRoot) return false;
     var overlay=ds.shadowRoot.querySelector('.overlay');
     if(!overlay) return false;
-    toggle=overlay.querySelector('.btn.spk');
-    if(toggle) return true;
-    var b=document.createElement('button');
-    b.type='button';
-    b.className='btn full spk';
-    b.setAttribute('aria-pressed',isOn()?'true':'false');
-    b.setAttribute('aria-label','발표 스피치 보기 토글 (S)');
-    b.setAttribute('title','발표 스피치 보기 (S)');
-    b.innerHTML='스피치<span class="kbd">S</span>';
-    b.addEventListener('click',function(){ setOn(!isOn()); });
-    overlay.appendChild(b);
     if(!ds.shadowRoot.getElementById('spk-btn-style')){
       var st=document.createElement('style');
       st.id='spk-btn-style';
-      st.textContent='.btn.spk{cursor:pointer;}'+
-        '.btn.spk[data-on]{background:rgba(26,188,254,.24);color:#fff;}'+
-        '.btn.spk[data-on]:hover{background:rgba(26,188,254,.34);}'+
-        '.btn.spk[data-on] .kbd{background:rgba(26,188,254,.5);color:#fff;}'+
-        /* 스피치 바가 켜지면 네비 오버레이를 바 위로 올림 (변수는 :root 에서 상속).
-           deck-stage 자체 .overlay 규칙(adopted sheet)이 뒤 순서라 !important 로 덮어씀. */
-        '.overlay{bottom:var(--spk-nav-bottom,22px)!important;transition:bottom 200ms cubic-bezier(.2,.8,.2,1),opacity 260ms ease,transform 260ms cubic-bezier(.2,.8,.2,1),filter 260ms ease;}';
+      /* 스피치 바가 켜지면 네비 오버레이를 바 위로 올림 (변수는 :root 에서 상속).
+         deck-stage 자체 .overlay 규칙(adopted sheet)이 뒤 순서라 !important 로 덮어씀. */
+      st.textContent='.overlay{bottom:var(--spk-nav-bottom,22px)!important;transition:bottom 200ms cubic-bezier(.2,.8,.2,1),opacity 260ms ease,transform 260ms cubic-bezier(.2,.8,.2,1),filter 260ms ease;}';
       ds.shadowRoot.appendChild(st);
     }
-    toggle=b;
-    toggle.toggleAttribute('data-on',isOn());
     return true;
   }
   /* deck-stage 업그레이드가 늦을 경우 대비해 몇 프레임 재시도 */
